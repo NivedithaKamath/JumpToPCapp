@@ -8,25 +8,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.view.Display;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,9 +29,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -150,6 +138,11 @@ public class HomeActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
+                try {
+                    setLandscapeOrientationLock();
+                } catch (Exception e) {
+                    permissionDialog();
+                }
                 startActivity(intent);
             }
         });
@@ -162,6 +155,11 @@ public class HomeActivity extends AppCompatActivity {
                 intent1.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent1.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
+                try {
+                    setLandscapeOrientationLock();
+                } catch (Exception e) {
+                    permissionDialog();
+                }
                 startActivity(intent1);
             }
         });
@@ -174,6 +172,11 @@ public class HomeActivity extends AppCompatActivity {
                 intent2.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent2.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
+                try {
+                    setLandscapeOrientationLock();
+                } catch (Exception e) {
+                    permissionDialog();
+                }
                 startActivity(intent2);
             }
         });
@@ -186,6 +189,11 @@ public class HomeActivity extends AppCompatActivity {
                 intent3.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent3.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
+                try {
+                    setLandscapeOrientationLock();
+                } catch (Exception e) {
+                    permissionDialog();
+                }
                 startActivity(intent3);
             }
         });
@@ -220,16 +228,25 @@ public class HomeActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
+                try {
+                    setLandscapeOrientationLock();
+                } catch (Exception e) {
+                    permissionDialog();
+                }
                 startActivity(intent);
             }
         });
 
+        permissionDialog();
+    }
+
+    private void permissionDialog() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(!Settings.System.canWrite(getApplicationContext())){
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-                builder.setTitle("Jump2PC Needs Permission");
+                builder.setTitle("Jump2PC needs your permission to change phone's system settings");
                 builder.setMessage("Press yes to continue");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -237,13 +254,9 @@ public class HomeActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        moveTaskToBack(true);
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                        System.exit(1);
-                    }
+                    public void onClick(DialogInterface dialog, int which) {}
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -331,7 +344,11 @@ public class HomeActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
-                setLandscapeOrientationLock();
+                try {
+                    setLandscapeOrientationLock();
+                } catch (Exception e) {
+                    permissionDialog();
+                }
                 startActivity(intent);
             }
         });
@@ -401,7 +418,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void date(){
         Date today = new Date();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd \n hh:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("DD-MM-YYYY \n hh:mm:ss");
         String dateToStr = format.format(today);
         dateTimeButton.setText(dateToStr);
     }
