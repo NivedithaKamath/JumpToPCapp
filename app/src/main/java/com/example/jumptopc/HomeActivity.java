@@ -101,6 +101,7 @@ public class HomeActivity extends AppCompatActivity {
 
         date();
 
+        //shows a pop up on click, to exit the  app
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,6 +118,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click sets the state of taskbar to visible
         keyboardButtonOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,6 +131,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, shows all the apps are present
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,6 +143,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the settings app
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -152,6 +156,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the bluetooth page
         bluetoothButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -164,6 +169,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the wifi page
         wifiButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -176,6 +182,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the brightness page
         brightnessButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -188,6 +195,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the list of library items
         libraryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,6 +206,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //sets the taskbar to invisible
         keyboardButtonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -210,6 +219,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the date and time page
         dateTimeButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -224,6 +234,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    //creates a pop up to exit from the app
     public void logOut(){
         final AlertDialog.Builder builder=new AlertDialog.Builder(HomeActivity.this);
         builder.setMessage("Are you sure you want to exit?");
@@ -244,6 +255,7 @@ public class HomeActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    //loads 4 apps on the desktop
     private void loadDesktopApps(){
         packageManager=getPackageManager();
         apps=new ArrayList<>();
@@ -261,6 +273,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    //loads the desktop  app in a list view
     private void loadDesktopListView(){
         desktopListView=(ListView)findViewById(R.id.desktopListView);
         ArrayAdapter<DesktopApps> adapter=new ArrayAdapter<DesktopApps>(this,R.layout.desktop_apps,apps){
@@ -283,6 +296,7 @@ public class HomeActivity extends AppCompatActivity {
         desktopListView.setFocusableInTouchMode(false);
     }
 
+    //on click, opens the selected app
     private void addDesktopClickListener(){
         desktopListView.setFocusableInTouchMode(false);
         desktopListView.setFocusable(false);
@@ -298,6 +312,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    //loads all the apps present in the phone
     private void loadStartApps(){
         manager=getPackageManager();
         app=new ArrayList<>();
@@ -319,6 +334,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    //loads all the apps in a list view
     private void loadStartListView(){
         startListView=(ListView)findViewById(R.id.startListView);
         ArrayAdapter<AppList> adapter=new ArrayAdapter<AppList>(this,R.layout.app_list,app){
@@ -339,6 +355,7 @@ public class HomeActivity extends AppCompatActivity {
         startListView.setAdapter(adapter);
     }
 
+    //on click, opens the selected app
     private void addStartClickListener(){
         startListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -349,6 +366,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    //set the size of the screen when in split screen mode
     public void rectangle(){
         Rect rect=new Rect(0,0,100,100);
         ActivityOptions activityOptions= null;
@@ -360,6 +378,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    //displays the current date and time
     public void date(){
         Date today = new Date();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd \n hh:mm:ss");
