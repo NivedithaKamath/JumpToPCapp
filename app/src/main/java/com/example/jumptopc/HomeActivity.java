@@ -61,8 +61,10 @@ public class HomeActivity extends AppCompatActivity {
     private List<AppList> app;
     int visibility;
     ImageButton keyboardButtonOpen,keyboardButtonClose;
+    String[] allowedDesktopApps = {"Gmail", "Chrome", "Drive", "Gallery"};
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,6 +224,31 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(!Settings.System.canWrite(getApplicationContext())){
+                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                builder.setTitle("Jump2PC Needs Permission");
+                builder.setMessage("Press yes to continue");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        startActivity(intent);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        moveTaskToBack(true);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        }
     }
 
     public void logOut(){
@@ -244,6 +271,12 @@ public class HomeActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // Set system portrait orientation lock.
+    private void setLandscapeOrientationLock() {
+        android.provider.Settings.System.putInt(getContentResolver(),
+                android.provider.Settings.System.ACCELEROMETER_ROTATION,1);
+    }
+
     private void loadDesktopApps(){
         packageManager=getPackageManager();
         apps=new ArrayList<>();
@@ -255,9 +288,14 @@ public class HomeActivity extends AppCompatActivity {
             appList.lable = ri.activityInfo.packageName;
             appList.name = ri.loadLabel(packageManager);
             appList.icon = ri.loadIcon(packageManager);
-            if (appList.name.equals("Gmail") || appList.name.equals("Chrome") || appList.name.equals("Drive") || appList.name.equals("Gallery")) {
-                apps.add(appList);
+            for(String allowedDesktopApp : allowedDesktopApps) {
+                if(allowedDesktopApp.equalsIgnoreCase(appList.name.toString())){
+                    apps.add(appList);
+                }
             }
+//            if (appList.name.equals("Gmail") || appList.name.equals("Chrome") || appList.name.equals("Drive") || appList.name.equals("Gallery")) {
+//                apps.add(appList);
+//            }
         }
     }
 
@@ -293,6 +331,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
+                setLandscapeOrientationLock();
                 startActivity(intent);
             }
         });
