@@ -117,6 +117,7 @@ public class HomeActivity extends AppCompatActivity {
         howToList();
         kidsList();
 
+        //on click, shows a dialog box to log out of the app
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,7 +139,8 @@ public class HomeActivity extends AppCompatActivity {
                 kidsLinearLayout.setVisibility(View.GONE);
             }
         });
-
+        
+        //on click, sets the taskbar to visible
         keyboardButtonOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,6 +153,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens a list of already existing apps
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,6 +165,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the settings app
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -179,6 +183,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the bluetooth page
         bluetoothButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -196,6 +201,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the wifi page
         wifiButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -213,6 +219,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the brightness page
         brightnessButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -230,6 +237,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, displays a list library items
         libraryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -240,6 +248,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, sets the taskbar from visible to gone
         keyboardButtonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -252,6 +261,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, opens the date and time settings page
         dateTimeButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -272,6 +282,7 @@ public class HomeActivity extends AppCompatActivity {
         permissionDialog();
     }
     
+    //on click of the item, opens the perticular list of videos
     libraryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -320,6 +331,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    //on click, opens the video in a wevView
         biologyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -368,6 +380,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    //on click, opens the video in a wevView
         chemistryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -416,6 +429,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    //on click, opens the video in a wevView
         diyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -450,6 +464,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    //on click, opens the video in a wevView
         historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -498,6 +513,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    //on click, opens the video in a wevView
         howToListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -546,6 +562,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    //on click, opens the video in a wevView
         kidsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -595,6 +612,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 }
 
+//displays a dialog box asking for permission to write the system settings
     private void permissionDialog() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(!Settings.System.canWrite(getApplicationContext())){
@@ -618,6 +636,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
+//contains a list of library items
 public void libraryList(){
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,libraryListItems);
         libraryListView.setAdapter(arrayAdapter);
@@ -629,6 +649,7 @@ public void libraryList(){
         });
     }
 
+//contains a list of videos that come under biology
     public void biologyList(){
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,biologyListItems);
         biologyListView.setAdapter(arrayAdapter);
@@ -640,6 +661,7 @@ public void libraryList(){
         });
     }
 
+//contains a list of videos that come under chemistry
     public void chemistryList(){
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,chemistryListItems);
         chemistryListView.setAdapter(arrayAdapter);
@@ -651,6 +673,7 @@ public void libraryList(){
         });
     }
 
+//contains a list of videos that come under DIY
     public void diyList(){
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,diyListItems);
         diyListView.setAdapter(arrayAdapter);
@@ -662,6 +685,7 @@ public void libraryList(){
         });
     }
 
+//contains a list of videos that come under history
     public void historyList(){
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,historyListItems);
         historyListView.setAdapter(arrayAdapter);
@@ -673,6 +697,7 @@ public void libraryList(){
         });
     }
 
+//contains a list of videos that come under how to series
     public void howToList(){
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,howToListItems);
         howToListView.setAdapter(arrayAdapter);
@@ -684,6 +709,7 @@ public void libraryList(){
         });
     }
 
+//contains a list of videos that come under kids
     public void kidsList(){
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,kidsListItems);
         kidsListView.setAdapter(arrayAdapter);
@@ -695,6 +721,7 @@ public void libraryList(){
         });
     }
 
+//displays a dialog box asking whether the user want to exit the app or not
     public void logOut(){
         final AlertDialog.Builder builder=new AlertDialog.Builder(HomeActivity.this);
         builder.setMessage("Are you sure you want to exit?");
@@ -721,6 +748,7 @@ public void libraryList(){
                 android.provider.Settings.System.ACCELEROMETER_ROTATION,1);
     }
 
+//loads 4 apps on the desktop
     private void loadDesktopApps(){
         packageManager=getPackageManager();
         apps=new ArrayList<>();
@@ -743,6 +771,7 @@ public void libraryList(){
         }
     }
 
+//loads the 4 desktop app in a list
     private void loadDesktopListView(){
         desktopListView=(ListView)findViewById(R.id.desktopListView);
         ArrayAdapter<DesktopApps> adapter=new ArrayAdapter<DesktopApps>(this,R.layout.desktop_apps,apps){
@@ -765,6 +794,7 @@ public void libraryList(){
         desktopListView.setFocusableInTouchMode(false);
     }
 
+//on click, opens the selected app
     private void addDesktopClickListener(){
         desktopListView.setFocusableInTouchMode(false);
         desktopListView.setFocusable(false);
@@ -785,6 +815,7 @@ public void libraryList(){
         });
     }
 
+//loads all the apps, install in the phone, in a list in alphabetical order
     private void loadStartApps(){
         manager=getPackageManager();
         app=new ArrayList<>();
@@ -806,6 +837,7 @@ public void libraryList(){
         });
     }
 
+//loads all the installed apps in a list
     private void loadStartListView(){
         startListView=(ListView)findViewById(R.id.startListView);
         ArrayAdapter<AppList> adapter=new ArrayAdapter<AppList>(this,R.layout.app_list,app){
@@ -826,6 +858,7 @@ public void libraryList(){
         startListView.setAdapter(adapter);
     }
 
+//on click, opens the selected app
     private void addStartClickListener(){
         startListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -836,6 +869,7 @@ public void libraryList(){
         });
     }
 
+//sets the screen size when split screen mode is on
     public void rectangle(){
         Rect rect=new Rect(0,0,100,100);
         ActivityOptions activityOptions= null;
@@ -847,6 +881,7 @@ public void libraryList(){
         }
     }
 
+//displays the current date and time
     public void date(){
         Date today = new Date();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("DD-MM-YYYY \n hh:mm:ss");
