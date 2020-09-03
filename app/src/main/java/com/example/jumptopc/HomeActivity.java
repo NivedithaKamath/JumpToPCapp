@@ -50,6 +50,13 @@ public class HomeActivity extends AppCompatActivity {
     int visibility;
     ImageButton keyboardButtonOpen,keyboardButtonClose;
     String[] allowedDesktopApps = {"Gmail", "Chrome", "Drive", "Gallery"};
+    String[] libraryListItems={"History","Chemistry","Biology","How to series","Kids","DIYs"};
+    String[] biologyListItems={"Carbon... SO SIMPLE: Crash Course Biology #1","45-minute Tips to Score more than 90% in Class 12 Board Exam: Biology","Board Exam Analysis: CBSE Class 12 Biology 2020","Science Booster Series - Class 10 Biology","Meritnation NEET Bytes (Biology): Heredity and variation: Part-2","Meritnation NEET Bytes (Biology): Heredity and variation: Part-1"};
+    String[] chemistryListItems={"Chemistry - SI and Derived Units","AIIMS 2018 - Complete Paper Analysis | Chemistry","NEET Chemistry: Electrochemistry - L1","NEET Chemistry: Electrochemistry - L2","NEET Chemistry: Electrochemistry - L3","NEET: Electrochemistry - L4"};
+    String[] diyListItems={"Sesame Street: DIY Sock Puppies with Nina, Elmo, and Abby","DIY Economical Face Mask At Home","DIY Face Mask","DIY Hand Sanitizer"};
+    String[] historyListItems={"The Agricultural Revolution: Crash Course World History #1","History vs. Genghis Khan","Crash Course European History Preview","Crash Course History of Science Preview","History of the Union Jack","Why the UK Election Results are the Worst in History."};
+    String[] howToListItems={"How To Hack Your To-Do List","How to Save the World from Email","How to Get Rich","How To Become World Class At Anything In 6 Months Or Less: 4 Hour Chef","How To Move And Pack Your House","How to Foolproof Your Budget"};
+    String[] kidsListItems={"Stories For Kids","Kids Stories (English)","Yoga For Kids","Kids and COVID-19 | FAQ","Traditional Lullaby Song for kids"};
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -80,6 +87,18 @@ public class HomeActivity extends AppCompatActivity {
         libraryButton=(Button)findViewById(R.id.libraryButton);
         libraryLinearLayout=(LinearLayout)findViewById(R.id.libraryLinearLayout);
         libraryListView=(ListView) findViewById(R.id.libraryListView);
+        biologyLinearLayout=(LinearLayout)findViewById(R.id.biologyLinearLayout);
+        chemistryLinearLayout=(LinearLayout)findViewById(R.id.chemistryLinearLayout);
+        diyLinearLayout=(LinearLayout)findViewById(R.id.diyLinearLayout);
+        historyLinearLayout=(LinearLayout)findViewById(R.id.historyLinearLayout);
+        howToLinearLayout=(LinearLayout)findViewById(R.id.howToLinearLayout);
+        kidsLinearLayout=(LinearLayout)findViewById(R.id.kidsLinearLayout);
+        biologyListView=(ListView) findViewById(R.id.biologyListView);
+        chemistryListView=(ListView) findViewById(R.id.chemistryListView);
+        diyListView=(ListView) findViewById(R.id.diyListView);
+        historyListView=(ListView) findViewById(R.id.historyListView);
+        howToListView=(ListView) findViewById(R.id.howToListView);
+        kidsListView=(ListView) findViewById(R.id.kidsListView);
 
         loadDesktopApps();
         loadDesktopListView();
@@ -90,6 +109,13 @@ public class HomeActivity extends AppCompatActivity {
         addStartClickListener();
 
         date();
+        libraryList();
+        biologyList();
+        chemistryList();
+        diyList();
+        historyList();
+        howToList();
+        kidsList();
 
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +130,12 @@ public class HomeActivity extends AppCompatActivity {
                 desktopListView.setVisibility(View.VISIBLE);
                 startListView.setVisibility(View.GONE);
                 libraryLinearLayout.setVisibility(View.GONE);
+                biologyLinearLayout.setVisibility(View.GONE);
+                chemistryLinearLayout.setVisibility(View.GONE);
+                diyLinearLayout.setVisibility(View.GONE);
+                historyLinearLayout.setVisibility(View.GONE);
+                howToLinearLayout.setVisibility(View.GONE);
+                kidsLinearLayout.setVisibility(View.GONE);
             }
         });
 
@@ -239,6 +271,329 @@ public class HomeActivity extends AppCompatActivity {
 
         permissionDialog();
     }
+    
+    libraryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Biology
+                if (i==0){
+                    visibility=biologyLinearLayout.getVisibility();
+                    if (visibility==View.GONE){
+                        biologyLinearLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+                //Chemistry
+                if (i==1){
+                    visibility=chemistryLinearLayout.getVisibility();
+                    if (visibility==View.GONE){
+                        chemistryLinearLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+                //DIYs
+                if (i==2){
+                    visibility=diyLinearLayout.getVisibility();
+                    if (visibility==View.GONE){
+                        diyLinearLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+                //History
+                if (i==3){
+                    visibility=historyLinearLayout.getVisibility();
+                    if (visibility==View.GONE){
+                        historyLinearLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+                //Hoe to series
+                if (i==4){
+                    visibility=howToLinearLayout.getVisibility();
+                    if (visibility==View.GONE){
+                        howToLinearLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+                //Kids
+                if (i==5){
+                    visibility=kidsLinearLayout.getVisibility();
+                    if (visibility==View.GONE){
+                        kidsLinearLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+
+        biologyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i==0) {
+                    url="https://www.youtube.com/watch?v=QnQe0xW_JY4&list=PL3EED4C1D684D3ADF";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==1){
+                    url="https://www.youtube.com/watch?v=qtzlmOe0fro&list=PL8z4bJQlT_9M9BEuqEbmWjVuxG90ZJ0-l&index=9";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==2){
+                    url="https://www.youtube.com/watch?v=q2F9ZTOiwrc&list=PL8z4bJQlT_9M9BEuqEbmWjVuxG90ZJ0-l&index=12";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==3){
+                    url="https://www.youtube.com/watch?v=MfC5c13xSBo&list=PL8z4bJQlT_9MQy7G3SwAVKGbfhcWbVUwN&index=1";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==4){
+                    url="https://www.youtube.com/watch?v=conSoVBzWnA&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=3";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==5){
+                    url="https://www.youtube.com/watch?v=CJ60yTr9xvk&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=6";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        chemistryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i==0) {
+                    url="https://www.youtube.com/watch?v=WV7FiOtCvHU&list=PLEry65uVHEikdocBNqoH5l6pCNkIxRBI0";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==1){
+                    url="https://www.youtube.com/watch?v=CjKnZWmCcak&list=PLsgHooHkqhhNgU00i00pgDnIvnSu4h2Pl&index=3";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==2){
+                    url="https://www.youtube.com/watch?v=W1emUNwTRKM&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=1";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==3){
+                    url="https://www.youtube.com/watch?v=cIaBgN4nhCA&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=2";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==4){
+                    url="https://www.youtube.com/watch?v=qkOrl0GnAWk&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=3";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==5){
+                    url="https://www.youtube.com/watch?v=IXDA3r63p5g&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=4";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        diyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i==0) {
+                    url="https://www.youtube.com/watch?v=gafVGrXTNg0&list=PL8TioFHubWFsYmcGTuRkA75ZYmJSmDjmH";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==1){
+                    url="https://www.youtube.com/watch?v=fAKl4vVxTv0";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==2){
+                    url="https://www.youtube.com/watch?v=RRofKRr5_JM";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==3){
+                    url="https://www.youtube.com/watch?v=mMtuzEX3cSI";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i==0) {
+                    url="hhttps://www.youtube.com/watch?v=Yocja_N5s1I&list=PLBDA2E52FB1EF80C9";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==1){
+                    url="https://www.youtube.com/watch?v=Eq-Wk3YqeH4&list=PLJicmE8fK0Ehj95_A5aaOvfzkKTrt3G3W&index=2&t=0s";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==2){
+                    url="https://www.youtube.com/watch?v=WhtuC9dp0Hk&list=PL8dPuuaLjXtMsMTfmRomkVQG8AqrAmJFX";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==3){
+                    url="https://www.youtube.com/watch?v=-hjGgFgnYIA&list=PL8dPuuaLjXtNppY8ZHMPDH5TKK2UpU8Ng";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==3){
+                    url="https://www.youtube.com/watch?v=WVZQapdkwLo&list=PLqs5ohhass_TWuJqc36II6McLxqLcRJfO";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==3){
+                    url="https://www.youtube.com/watch?v=r9rGX91rq5I&list=PLqs5ohhass_Tpgf5mu4R1EHvDPs2Bk_rY";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        howToListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i==0) {
+                    url="https://www.youtube.com/watch?v=PKqBfVNWCEQ&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=2";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==1){
+                    url="https://www.youtube.com/watch?v=DoAdoSSjNSM&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=3";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==2){
+                    url="https://www.youtube.com/watch?v=CV7hAAcApnE&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=4";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==3){
+                    url="https://www.youtube.com/watch?v=WzyvvkiUIKY&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=5";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==4){
+                    url="https://www.youtube.com/watch?v=p0GQQT747KY&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=7";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==5){
+                    url="https://www.youtube.com/watch?v=j74DfIOLvfM&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=8";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        kidsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i==0) {
+                    url="https://www.youtube.com/watch?v=7eBnRP5jx48&list=PLhuEelKSHsFnJxqcMvKB093R8h4ep_Tim";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==1){
+                    url="https://www.youtube.com/watch?v=55vyFBtZ4EA&list=PLhuEelKSHsFnJxqcMvKB093R8h4ep_TIm&index=6";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==2){
+                    url="https://www.youtube.com/watch?v=ASA213fYEjg";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==3){
+                    url="https://www.youtube.com/watch?v=7vdAgTO2zvY";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==4){
+                    url="https://www.youtube.com/watch?v=O9t15cBRPwI&list=PL54FD685741AD8C27&index=5";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+                else if (i==5){
+                    url="https://www.youtube.com/watch?v=CJ60yTr9xvk&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=6";
+                    editor.putString("url",url);
+                    editor.commit();
+                    Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+}
 
     private void permissionDialog() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -262,6 +617,82 @@ public class HomeActivity extends AppCompatActivity {
                 dialog.show();
             }
         }
+    }
+public void libraryList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,libraryListItems);
+        libraryListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(libraryListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void biologyList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,biologyListItems);
+        biologyListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(biologyListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void chemistryList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,chemistryListItems);
+        chemistryListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(chemistryListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void diyList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,diyListItems);
+        diyListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(diyListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void historyList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,historyListItems);
+        historyListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(historyListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void howToList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,howToListItems);
+        howToListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(howToListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void kidsList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,kidsListItems);
+        kidsListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(kidsListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
     }
 
     public void logOut(){
