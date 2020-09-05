@@ -19,6 +19,7 @@
             android:name=".HomeActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Wallpaper"/>
+            android:resizeableActivity="true">
         <activity android:name=".SecondActivity"
             android:screenOrientation="landscape"/>
         <activity android:name=".MainActivity"

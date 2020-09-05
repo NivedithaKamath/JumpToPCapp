@@ -22,7 +22,7 @@
             android:id="@+id/desktopListView"
             android:divider="@null">
         </ListView>
-    </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/exitLinearLayout"
@@ -74,11 +74,12 @@
             android:layout_marginBottom="31dp"
             android:background="@color/white"
             android:visibility="visible">
+
             <ListView
+                android:id="@+id/libraryListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/libraryListView"
-                android:divider="@null"/>
+                android:divider="@null" />
 
         </LinearLayout>
 

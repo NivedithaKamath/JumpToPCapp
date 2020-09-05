@@ -342,14 +342,26 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent=packageManager.getLaunchIntentForPackage(apps.get(position).lable.toString());
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                rectangle();
+               // intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                //rectangle();
+
                 try {
                     setLandscapeOrientationLock();
+
                 } catch (Exception e) {
                     permissionDialog();
                 }
-                startActivity(intent);
+                //change also made here
+                Rect rect=new Rect(100,100,100,100);
+                ActivityOptions activityOptions= null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    activityOptions = ActivityOptions.makeBasic();
+                }
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    ActivityOptions bounds = activityOptions.setLaunchBounds(rect);
+                    startActivity(intent, bounds.toBundle());
+                }
+               // startActivity(intent);
             }
         });
     }
@@ -397,16 +409,33 @@ public class HomeActivity extends AppCompatActivity {
 
     private void addStartClickListener(){
         startListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent=manager.getLaunchIntentForPackage(app.get(position).lable.toString());
-                startActivity(intent);
+
+                // Another change made here
+                intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
+                //Rect rect = new Rect(50, 50, 80, 80);
+
+
+                Rect rect=new Rect(100,100,100,100);
+                ActivityOptions activityOptions= null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    activityOptions = ActivityOptions.makeBasic();
+                }
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    ActivityOptions bounds=activityOptions.setLaunchBounds(rect);
+                    startActivity(intent, bounds.toBundle());
+                }
+
             }
         });
     }
 
     public void rectangle(){
-        Rect rect=new Rect(0,0,100,100);
+        Rect rect=new Rect(50,50,80,80);
         ActivityOptions activityOptions= null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             activityOptions = ActivityOptions.makeBasic();
