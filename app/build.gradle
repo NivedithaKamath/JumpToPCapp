@@ -30,5 +30,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    
+    //added a new dependency to view images using urls
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
 }
