@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -29,9 +30,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -39,8 +40,8 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    LinearLayout desktopLinearLayout, startLinearLayout, exitLinearLayout,bottomLinearLayoutLeft,bottomLinearLayoutRight,libraryLinearLayout;
-    ListView desktopListView, startListView,libraryListView;
+    LinearLayout desktopLinearLayout, startLinearLayout, exitLinearLayout,bottomLinearLayoutLeft,bottomLinearLayoutRight,libraryLinearLayout,biologyLinearLayout,chemistryLinearLayout,diyLinearLayout,historyLinearLayout,howToLinearLayout,kidsLinearLayout;
+    ListView desktopListView, startListView,libraryListView,biologyListView,chemistryListView,diyListView,historyListView,howToListView,kidsListView;
     FrameLayout frameLayout,bottomFrameLayout;
     Button exitButton,startButton,settingsButton,bluetoothButton,wifiButton,brightnessButton,dateTimeButton,libraryButton;
     TextView exitTextView;
@@ -49,8 +50,16 @@ public class HomeActivity extends AppCompatActivity {
     private List<AppList> app;
     int visibility;
     ImageButton keyboardButtonOpen,keyboardButtonClose;
+    SharedPreferences sharedPreferences;
+    String url;
     String[] allowedDesktopApps = {"Gmail", "Chrome", "Drive", "Gallery"};
-
+    String[] libraryListItems={"History","Chemistry","Biology","How to series","Kids","DIYs"};
+    String[] biologyListItems={"Carbon... SO SIMPLE: Crash Course Biology #1","45-minute Tips to Score more than 90% in Class 12 Board Exam: Biology","Board Exam Analysis: CBSE Class 12 Biology 2020","Science Booster Series - Class 10 Biology","Meritnation NEET Bytes (Biology): Heredity and variation: Part-2","Meritnation NEET Bytes (Biology): Heredity and variation: Part-1"};
+    String[] chemistryListItems={"Chemistry - SI and Derived Units","AIIMS 2018 - Complete Paper Analysis | Chemistry","NEET Chemistry: Electrochemistry - L1","NEET Chemistry: Electrochemistry - L2","NEET Chemistry: Electrochemistry - L3","NEET: Electrochemistry - L4"};
+    String[] diyListItems={"Sesame Street: DIY Sock Puppies with Nina, Elmo, and Abby","DIY Economical Face Mask At Home","DIY Face Mask","DIY Hand Sanitizer"};
+    String[] historyListItems={"The Agricultural Revolution: Crash Course World History #1","History vs. Genghis Khan","Crash Course European History Preview","Crash Course History of Science Preview","History of the Union Jack","Why the UK Election Results are the Worst in History."};
+    String[] howToListItems={"How To Hack Your To-Do List","How to Save the World from Email","How to Get Rich","How To Become World Class At Anything In 6 Months Or Less: 4 Hour Chef","How To Move And Pack Your House","How to Foolproof Your Budget"};
+    String[] kidsListItems={"Stories For Kids","Kids Stories (English)","Yoga For Kids","Kids and COVID-19 | FAQ","Traditional Lullaby Song for kids"};
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -80,6 +89,21 @@ public class HomeActivity extends AppCompatActivity {
         libraryButton=(Button)findViewById(R.id.libraryButton);
         libraryLinearLayout=(LinearLayout)findViewById(R.id.libraryLinearLayout);
         libraryListView=(ListView) findViewById(R.id.libraryListView);
+        biologyLinearLayout=(LinearLayout)findViewById(R.id.biologyLinearLayout);
+        chemistryLinearLayout=(LinearLayout)findViewById(R.id.chemistryLinearLayout);
+        diyLinearLayout=(LinearLayout)findViewById(R.id.diyLinearLayout);
+        historyLinearLayout=(LinearLayout)findViewById(R.id.historyLinearLayout);
+        howToLinearLayout=(LinearLayout)findViewById(R.id.howToLinearLayout);
+        kidsLinearLayout=(LinearLayout)findViewById(R.id.kidsLinearLayout);
+        biologyListView=(ListView) findViewById(R.id.biologyListView);
+        chemistryListView=(ListView) findViewById(R.id.chemistryListView);
+        diyListView=(ListView) findViewById(R.id.diyListView);
+        historyListView=(ListView) findViewById(R.id.historyListView);
+        howToListView=(ListView) findViewById(R.id.howToListView);
+        kidsListView=(ListView) findViewById(R.id.kidsListView);
+
+        //sharedPreferences=getSharedPreferences("pref",MODE_PRIVATE);
+        //final SharedPreferences.Editor editor=sharedPreferences.edit();
 
         loadDesktopApps();
         loadDesktopListView();
@@ -90,6 +114,15 @@ public class HomeActivity extends AppCompatActivity {
         addStartClickListener();
 
         date();
+
+        libraryList();
+        biologyList();
+        chemistryList();
+        diyList();
+        historyList();
+        howToList();
+        kidsList();
+
 
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +137,12 @@ public class HomeActivity extends AppCompatActivity {
                 desktopListView.setVisibility(View.VISIBLE);
                 startListView.setVisibility(View.GONE);
                 libraryLinearLayout.setVisibility(View.GONE);
+                biologyLinearLayout.setVisibility(View.GONE);
+                chemistryLinearLayout.setVisibility(View.GONE);
+                diyLinearLayout.setVisibility(View.GONE);
+                historyLinearLayout.setVisibility(View.GONE);
+                howToLinearLayout.setVisibility(View.GONE);
+                kidsLinearLayout.setVisibility(View.GONE);
             }
         });
 
@@ -138,11 +177,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
-                try {
-                    setLandscapeOrientationLock();
-                } catch (Exception e) {
-                    permissionDialog();
-                }
+                setLandscapeOrientationLock();
                 startActivity(intent);
             }
         });
@@ -155,11 +190,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent1.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent1.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
-                try {
-                    setLandscapeOrientationLock();
-                } catch (Exception e) {
-                    permissionDialog();
-                }
+                setLandscapeOrientationLock();
                 startActivity(intent1);
             }
         });
@@ -172,11 +203,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent2.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent2.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
-                try {
-                    setLandscapeOrientationLock();
-                } catch (Exception e) {
-                    permissionDialog();
-                }
+                setLandscapeOrientationLock();
                 startActivity(intent2);
             }
         });
@@ -189,11 +216,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent3.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent3.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
-                try {
-                    setLandscapeOrientationLock();
-                } catch (Exception e) {
-                    permissionDialog();
-                }
+                setLandscapeOrientationLock();
                 startActivity(intent3);
             }
         });
@@ -228,40 +251,324 @@ public class HomeActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
-                try {
-                    setLandscapeOrientationLock();
-                } catch (Exception e) {
-                    permissionDialog();
-                }
+                setLandscapeOrientationLock();
                 startActivity(intent);
             }
         });
 
         permissionDialog();
+
+
+        libraryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    //Biology
+                    case 0:
+                        visibility = biologyLinearLayout.getVisibility();
+                        if (visibility == View.GONE) {
+                            biologyLinearLayout.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    //Chemistry
+                    case 1:
+                        visibility = chemistryLinearLayout.getVisibility();
+                        if (visibility == View.GONE) {
+                            chemistryLinearLayout.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    //DIYs
+                    case 2:
+                        visibility = diyLinearLayout.getVisibility();
+                        if (visibility == View.GONE) {
+                            diyLinearLayout.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    //History
+                    case 3:
+                        visibility = historyLinearLayout.getVisibility();
+                        if (visibility == View.GONE) {
+                            historyLinearLayout.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    //Hoe to series
+                    case 4:
+                        visibility = howToLinearLayout.getVisibility();
+                        if (visibility == View.GONE) {
+                            howToLinearLayout.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    //Kids
+                    case 5:
+                        visibility = kidsLinearLayout.getVisibility();
+                        if (visibility == View.GONE) {
+                            kidsLinearLayout.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                }
+            }
+        });
+
+        biologyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        url="https://www.youtube.com/watch?v=QnQe0xW_JY4&list=PL3EED4C1D684D3ADF";
+                        goToVideoActivity();
+                        break;
+                    case 1:
+                        url="https://www.youtube.com/watch?v=qtzlmOe0fro&list=PL8z4bJQlT_9M9BEuqEbmWjVuxG90ZJ0-l&index=9";
+                        goToVideoActivity();
+                        break;
+                    case 2:
+                        url="https://www.youtube.com/watch?v=q2F9ZTOiwrc&list=PL8z4bJQlT_9M9BEuqEbmWjVuxG90ZJ0-l&index=12";
+                        goToVideoActivity();
+                        break;
+                    case 3:
+                        url="https://www.youtube.com/watch?v=MfC5c13xSBo&list=PL8z4bJQlT_9MQy7G3SwAVKGbfhcWbVUwN&index=1";
+                        goToVideoActivity();
+                        break;
+                    case 4:
+                        url="https://www.youtube.com/watch?v=conSoVBzWnA&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=3";
+                        goToVideoActivity();
+                        break;
+                    case 5:
+                        url="https://www.youtube.com/watch?v=CJ60yTr9xvk&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=6";
+                        goToVideoActivity();
+                        break;
+                }
+            }
+        });
+
+        chemistryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        url="https://www.youtube.com/watch?v=WV7FiOtCvHU&list=PLEry65uVHEikdocBNqoH5l6pCNkIxRBI0";
+                        goToVideoActivity();
+                        break;
+                    case 1:
+                        url="https://www.youtube.com/watch?v=CjKnZWmCcak&list=PLsgHooHkqhhNgU00i00pgDnIvnSu4h2Pl&index=3";
+                        goToVideoActivity();
+                        break;
+                    case 2:
+                        url="https://www.youtube.com/watch?v=W1emUNwTRKM&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=1";
+                        goToVideoActivity();
+                        break;
+                    case 3:
+                        url="https://www.youtube.com/watch?v=cIaBgN4nhCA&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=2";
+                        goToVideoActivity();
+                        break;
+                    case 4:
+                        url="https://www.youtube.com/watch?v=qkOrl0GnAWk&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=3";
+                        goToVideoActivity();
+                        break;
+                    case 5:
+                        url="https://www.youtube.com/watch?v=IXDA3r63p5g&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=4";
+                        goToVideoActivity();
+                        break;
+                }
+            }
+        });
+
+        diyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        url="https://www.youtube.com/watch?v=gafVGrXTNg0&list=PL8TioFHubWFsYmcGTuRkA75ZYmJSmDjmH";
+                        goToVideoActivity();
+                        break;
+                    case 1:
+                        url="https://www.youtube.com/watch?v=fAKl4vVxTv0";
+                        goToVideoActivity();
+                        break;
+                    case 2:
+                        url="https://www.youtube.com/watch?v=RRofKRr5_JM";
+                        goToVideoActivity();
+                        break;
+                    case 3:
+                        url="https://www.youtube.com/watch?v=mMtuzEX3cSI";
+                        goToVideoActivity();
+                        break;
+                }
+            }
+        });
+
+        historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        url="hhttps://www.youtube.com/watch?v=Yocja_N5s1I&list=PLBDA2E52FB1EF80C9";
+                        goToVideoActivity();
+                        break;
+                    case 1:
+                        url="https://www.youtube.com/watch?v=Eq-Wk3YqeH4&list=PLJicmE8fK0Ehj95_A5aaOvfzkKTrt3G3W&index=2&t=0s";
+                        goToVideoActivity();
+                        break;
+                    case 2:
+                        goToVideoActivity();
+                        break;
+                    case 3:
+                        url="https://www.youtube.com/watch?v=-hjGgFgnYIA&list=PL8dPuuaLjXtNppY8ZHMPDH5TKK2UpU8Ng";
+                        goToVideoActivity();
+                        break;
+                    case 4:
+                        url="https://www.youtube.com/watch?v=WVZQapdkwLo&list=PLqs5ohhass_TWuJqc36II6McLxqLcRJfO";
+                        goToVideoActivity();
+                        break;
+                    case 5:
+                        url="https://www.youtube.com/watch?v=r9rGX91rq5I&list=PLqs5ohhass_Tpgf5mu4R1EHvDPs2Bk_rY";
+                        goToVideoActivity();
+                        break;
+                }
+            }
+        });
+
+        howToListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        url="https://www.youtube.com/watch?v=PKqBfVNWCEQ&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=2";
+                        goToVideoActivity();
+                        break;
+                    case 1:
+                        url="https://www.youtube.com/watch?v=DoAdoSSjNSM&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=3";
+                        goToVideoActivity();
+                        break;
+                    case 2:
+                        url="https://www.youtube.com/watch?v=CV7hAAcApnE&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=4";
+                        goToVideoActivity();
+                        break;
+                    case 3:
+                        url="https://www.youtube.com/watch?v=WzyvvkiUIKY&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=5";
+                        goToVideoActivity();
+                        break;
+                    case 4:
+                        url="https://www.youtube.com/watch?v=p0GQQT747KY&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=7";
+                        goToVideoActivity();
+                        break;
+                    case 5:
+                        url="https://www.youtube.com/watch?v=j74DfIOLvfM&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=8";
+                        goToVideoActivity();
+                        break;
+                }
+            }
+        });
+
+        kidsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        url="https://www.youtube.com/watch?v=7eBnRP5jx48&list=PLhuEelKSHsFnJxqcMvKB093R8h4ep_Tim";
+                        goToVideoActivity();
+                        break;
+                    case 1:
+                        url="https://www.youtube.com/watch?v=55vyFBtZ4EA&list=PLhuEelKSHsFnJxqcMvKB093R8h4ep_TIm&index=6";
+                        goToVideoActivity();
+                        break;
+                    case 2:
+                        url="https://www.youtube.com/watch?v=ASA213fYEjg";
+                        goToVideoActivity();
+                        break;
+                    case 3:
+                        url="https://www.youtube.com/watch?v=7vdAgTO2zvY";
+                        goToVideoActivity();
+                        break;
+                    case 4:
+                        url="https://www.youtube.com/watch?v=O9t15cBRPwI&list=PL54FD685741AD8C27&index=5";
+                        goToVideoActivity();
+                        break;
+                    case 5:
+                        url="https://www.youtube.com/watch?v=CJ60yTr9xvk&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=6";
+                        goToVideoActivity();
+                        break;
+                }
+            }
+        });
+
     }
 
-    private void permissionDialog() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(!Settings.System.canWrite(getApplicationContext())){
-                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-                builder.setTitle("Jump2PC needs your permission to change phone's system settings");
-                builder.setMessage("Press yes to continue");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                        startActivity(intent);
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+    public void libraryList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,libraryListItems);
+        libraryListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(libraryListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
             }
-        }
+        });
+    }
+
+    public void biologyList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,biologyListItems);
+        biologyListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(biologyListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void chemistryList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,chemistryListItems);
+        chemistryListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(chemistryListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void diyList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,diyListItems);
+        diyListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(diyListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void historyList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,historyListItems);
+        historyListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(historyListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void howToList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,howToListItems);
+        howToListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(howToListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
+    }
+
+    public void kidsList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,kidsListItems);
+        kidsListView.setAdapter(arrayAdapter);
+        Collections.sort(Arrays.asList(kidsListItems), new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return s.compareTo(t1);
+            }
+        });
     }
 
     public void logOut(){
@@ -284,12 +591,6 @@ public class HomeActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    // Set system portrait orientation lock.
-    private void setLandscapeOrientationLock() {
-        android.provider.Settings.System.putInt(getContentResolver(),
-                android.provider.Settings.System.ACCELEROMETER_ROTATION,1);
-    }
-
     private void loadDesktopApps(){
         packageManager=getPackageManager();
         apps=new ArrayList<>();
@@ -306,9 +607,9 @@ public class HomeActivity extends AppCompatActivity {
                     apps.add(appList);
                 }
             }
-//            if (appList.name.equals("Gmail") || appList.name.equals("Chrome") || appList.name.equals("Drive") || appList.name.equals("Gallery")) {
-//                apps.add(appList);
-//            }
+            //if (appList.name.equals("Gmail") || appList.name.equals("Chrome") || appList.name.equals("Drive") || appList.name.equals("Gallery")) {
+             //   apps.add(appList);
+            //}
         }
     }
 
@@ -400,6 +701,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent=manager.getLaunchIntentForPackage(app.get(position).lable.toString());
+                intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                rectangle();
+                try {
+                    setLandscapeOrientationLock();
+                } catch (Exception e) {
+                    permissionDialog();
+                }
                 startActivity(intent);
             }
         });
@@ -421,6 +730,50 @@ public class HomeActivity extends AppCompatActivity {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("DD-MM-YYYY \n hh:mm:ss");
         String dateToStr = format.format(today);
         dateTimeButton.setText(dateToStr);
+    }
+
+    private void setLandscapeOrientationLock() {
+        try {
+            android.provider.Settings.System.putInt(getContentResolver(),
+                    android.provider.Settings.System.ACCELEROMETER_ROTATION,1);
+        }
+        catch (Exception e){
+            permissionDialog();
+        };
+    }
+
+    private void permissionDialog(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.System.canWrite(getApplicationContext())) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                builder.setTitle("Jump2PC needs your permission to change phone's system settings");
+                builder.setMessage("Press yes to continue");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        startActivity(intent);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        }
+    }
+
+    private void goToVideoActivity(){
+        sharedPreferences=getSharedPreferences("pref",MODE_PRIVATE);
+        final SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString("url",url);
+        editor.commit();
+        Intent intent = new Intent(HomeActivity.this, VideoActivity.class);
+        startActivity(intent);
     }
 
 }
