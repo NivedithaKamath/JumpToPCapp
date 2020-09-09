@@ -14,6 +14,10 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +25,10 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,6 +38,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +71,19 @@ public class HomeActivity extends AppCompatActivity {
     String[] biologyListItems={"Carbon... SO SIMPLE: Crash Course Biology #1","45-minute Tips to Score more than 90% in Class 12 Board Exam: Biology","Board Exam Analysis: CBSE Class 12 Biology 2020","Science Booster Series - Class 10 Biology","Meritnation NEET Bytes (Biology): Heredity and variation: Part-2","Meritnation NEET Bytes (Biology): Heredity and variation: Part-1"};
     String[] chemistryListItems={"Chemistry - SI and Derived Units","AIIMS 2018 - Complete Paper Analysis | Chemistry","NEET Chemistry: Electrochemistry - L1","NEET Chemistry: Electrochemistry - L2","NEET Chemistry: Electrochemistry - L3","NEET: Electrochemistry - L4"};
     String[] diyListItems={"Sesame Street: DIY Sock Puppies with Nina, Elmo, and Abby","DIY Economical Face Mask At Home","DIY Face Mask","DIY Hand Sanitizer"};
+    String[] historyListItems={"The Agricultural Revolution: Crash Course World History #1","History vs. Genghis Khan","Crash Course History of Science Preview","History of the Union Jack","Why the UK Election Results are the Worst in History."};
+    String[] howToListItems={"How To Hack Your To-Do List","How to Save the World from Email","How to Get Rich","How To Become World Class At Anything In 6 Months Or Less: 4 Hour Chef","How To Move And Pack Your House","How to Foolproof Your Budget"};
+    String[] kidsListItems={"Stories For Kids","Kids Stories (English)","Yoga For Kids","Kids and COVID-19 | FAQ","Traditional Lullaby Song for kids"};
+
+    private static String baseUrl="https://www.youtube.com/watch?v=";
+    private static String imageUrl="https://img.youtube.com/vi/";
+    private static String imageDefault="/default.jpg";
+    String[] biologyImage={imageUrl+"QnQe0xW_JY4"+imageDefault,imageUrl+"qtzlmOe0fro"+imageDefault,imageUrl+"q2F9ZTOiwrc"+imageDefault,imageUrl+"MfC5c13xSBo"+imageDefault,imageUrl+"conSoVBzWnA"+imageDefault,imageUrl+"CJ60yTr9xvk"+imageDefault};
+    String[] chemistryImage={imageUrl+"WV7FiOtCvHU"+imageDefault,imageUrl+"CjKnZWmCcak"+imageDefault,imageUrl+"W1emUNwTRKM"+imageDefault,imageUrl+"cIaBgN4nhCA"+imageDefault,imageUrl+"qkOrl0GnAWk"+imageDefault,imageUrl+"IXDA3r63p5g"+imageDefault};
+    String[] diyImage={imageUrl+"gafVGrXTNg0"+imageDefault,imageUrl+"fAKl4vVxTv0"+imageDefault,imageUrl+"RRofKRr5_JM"+imageDefault,imageUrl+"mMtuzEX3cSI"+imageDefault};
+    String[] historyImage={imageUrl+"Yocja_N5s1I"+imageDefault,imageUrl+"Eq-Wk3YqeH4"+imageDefault,imageUrl+"-hjGgFgnYIA"+imageDefault,imageUrl+"WVZQapdkwLo"+imageDefault,imageUrl+"r9rGX91rq5I"+imageDefault};
+    String[] howToImage={imageUrl+"PKqBfVNWCEQ"+imageDefault,imageUrl+"DoAdoSSjNSM"+imageDefault,imageUrl+"CV7hAAcApnE"+imageDefault,imageUrl+"WzyvvkiUIKY"+imageDefault,imageUrl+"p0GQQT747KY/"+imageDefault,imageUrl+"j74DfIOLvfM"+imageDefault};
+    String[] kidsImage={imageUrl+"7eBnRP5jx48"+imageDefault,imageUrl+"55vyFBtZ4EA"+imageDefault,imageUrl+"ASA213fYEjg"+imageDefault,imageUrl+"7vdAgTO2zvY"+imageDefault,imageUrl+"O9t15cBRPwI"+imageDefault,imageUrl+"CJ60yTr9xvk"+imageDefault};
     String[] historyListItems={"The Agricultural Revolution: Crash Course World History #1","History vs. Genghis Khan","Crash Course European History Preview","Crash Course History of Science Preview","History of the Union Jack","Why the UK Election Results are the Worst in History."};
     String[] howToListItems={"How To Hack Your To-Do List","How to Save the World from Email","How to Get Rich","How To Become World Class At Anything In 6 Months Or Less: 4 Hour Chef","How To Move And Pack Your House","How to Foolproof Your Budget"};
     String[] kidsListItems={"Stories For Kids","Kids Stories (English)","Yoga For Kids","Kids and COVID-19 | FAQ","Traditional Lullaby Song for kids"};
@@ -102,9 +129,6 @@ public class HomeActivity extends AppCompatActivity {
         howToListView=(ListView) findViewById(R.id.howToListView);
         kidsListView=(ListView) findViewById(R.id.kidsListView);
 
-        //sharedPreferences=getSharedPreferences("pref",MODE_PRIVATE);
-        //final SharedPreferences.Editor editor=sharedPreferences.edit();
-
         loadDesktopApps();
         loadDesktopListView();
         addDesktopClickListener();
@@ -116,13 +140,12 @@ public class HomeActivity extends AppCompatActivity {
         date();
 
         libraryList();
-        biologyList();
-        chemistryList();
-        diyList();
-        historyList();
-        howToList();
-        kidsList();
-
+        thumbnailBiologyList();
+        thumbnailChemistryList();
+        thumbnailDIYList();
+        thumbnailHistoryList();
+        thumbnailHowToList();
+        thumbnailKidsList();
 
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +154,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //on click, sets the visibility of the given widgets
         frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,6 +170,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //displays the taskbar
         keyboardButtonOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,6 +183,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //opens the list of installed apps of the phone
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,6 +195,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //opens the settings page
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -182,6 +209,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //opens the bluetooth page
         bluetoothButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -195,6 +223,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //opens the wifi page
         wifiButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -208,6 +237,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //opens the brightness page
         brightnessButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -221,6 +251,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //opens the list of subjects
         libraryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -231,6 +262,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //disables the taskbar
         keyboardButtonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -243,6 +275,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //displays the date and time page
         dateTimeButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -257,8 +290,18 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         permissionDialog();
+        onClickLibraryList();
+        onClickBiologyList();
+        onClickChemistryList();
+        onClickDiyList();
+        onClickHistoryList();
+        onClickHowToList();
+        onClickKidsList();
 
+    }
 
+    //on click, sets the visibility of the list of subjects to visible
+    private void onClickLibraryList(){
         libraryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -308,194 +351,220 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    //redirects to the VideoActivity page and displays the selected video under biology
+    private void onClickBiologyList(){
         biologyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        url="https://www.youtube.com/watch?v=QnQe0xW_JY4&list=PL3EED4C1D684D3ADF";
+                        url=baseUrl+"QnQe0xW_JY4&list=PL3EED4C1D684D3ADF";
                         goToVideoActivity();
                         break;
                     case 1:
-                        url="https://www.youtube.com/watch?v=qtzlmOe0fro&list=PL8z4bJQlT_9M9BEuqEbmWjVuxG90ZJ0-l&index=9";
+                        url=baseUrl+"qtzlmOe0fro&list=PL8z4bJQlT_9M9BEuqEbmWjVuxG90ZJ0-l&index=9";
                         goToVideoActivity();
                         break;
                     case 2:
-                        url="https://www.youtube.com/watch?v=q2F9ZTOiwrc&list=PL8z4bJQlT_9M9BEuqEbmWjVuxG90ZJ0-l&index=12";
+                        url=baseUrl+"q2F9ZTOiwrc&list=PL8z4bJQlT_9M9BEuqEbmWjVuxG90ZJ0-l&index=12";
                         goToVideoActivity();
                         break;
                     case 3:
-                        url="https://www.youtube.com/watch?v=MfC5c13xSBo&list=PL8z4bJQlT_9MQy7G3SwAVKGbfhcWbVUwN&index=1";
+                        url=baseUrl+"MfC5c13xSBo&list=PL8z4bJQlT_9MQy7G3SwAVKGbfhcWbVUwN&index=1";
                         goToVideoActivity();
                         break;
                     case 4:
-                        url="https://www.youtube.com/watch?v=conSoVBzWnA&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=3";
+                        url=baseUrl+"conSoVBzWnA&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=3";
                         goToVideoActivity();
                         break;
                     case 5:
-                        url="https://www.youtube.com/watch?v=CJ60yTr9xvk&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=6";
+                        url=baseUrl+"CJ60yTr9xvk&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=6";
                         goToVideoActivity();
                         break;
                 }
             }
         });
+    }
 
+    //redirects to the VideoActivity page and displays the selected video under chemistry
+    private void onClickChemistryList(){
         chemistryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        url="https://www.youtube.com/watch?v=WV7FiOtCvHU&list=PLEry65uVHEikdocBNqoH5l6pCNkIxRBI0";
+                        url=baseUrl+"WV7FiOtCvHU&list=PLEry65uVHEikdocBNqoH5l6pCNkIxRBI0";
                         goToVideoActivity();
                         break;
                     case 1:
-                        url="https://www.youtube.com/watch?v=CjKnZWmCcak&list=PLsgHooHkqhhNgU00i00pgDnIvnSu4h2Pl&index=3";
+                        url=baseUrl+"CjKnZWmCcak&list=PLsgHooHkqhhNgU00i00pgDnIvnSu4h2Pl&index=3";
                         goToVideoActivity();
                         break;
                     case 2:
-                        url="https://www.youtube.com/watch?v=W1emUNwTRKM&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=1";
+                        url=baseUrl+"W1emUNwTRKM&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=1";
                         goToVideoActivity();
                         break;
                     case 3:
-                        url="https://www.youtube.com/watch?v=cIaBgN4nhCA&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=2";
+                        url=baseUrl+"cIaBgN4nhCA&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=2";
                         goToVideoActivity();
                         break;
                     case 4:
-                        url="https://www.youtube.com/watch?v=qkOrl0GnAWk&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=3";
+                        url=baseUrl+"qkOrl0GnAWk&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=3";
                         goToVideoActivity();
                         break;
                     case 5:
-                        url="https://www.youtube.com/watch?v=IXDA3r63p5g&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=4";
+                        url=baseUrl+"IXDA3r63p5g&list=PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg&index=4";
                         goToVideoActivity();
                         break;
                 }
             }
         });
+    }
 
+    //redirects to the VideoActivity page and displays the selected video under diy
+    private void onClickDiyList(){
         diyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        url="https://www.youtube.com/watch?v=gafVGrXTNg0&list=PL8TioFHubWFsYmcGTuRkA75ZYmJSmDjmH";
+                        url=baseUrl+"gafVGrXTNg0&list=PL8TioFHubWFsYmcGTuRkA75ZYmJSmDjmH";
                         goToVideoActivity();
                         break;
                     case 1:
-                        url="https://www.youtube.com/watch?v=fAKl4vVxTv0";
+                        url=baseUrl+"fAKl4vVxTv0";
                         goToVideoActivity();
                         break;
                     case 2:
-                        url="https://www.youtube.com/watch?v=RRofKRr5_JM";
+                        url=baseUrl+"RRofKRr5_JM";
                         goToVideoActivity();
                         break;
                     case 3:
-                        url="https://www.youtube.com/watch?v=mMtuzEX3cSI";
+                        url=baseUrl+"mMtuzEX3cSI";
                         goToVideoActivity();
                         break;
                 }
             }
         });
+    }
 
+    //redirects to the VideoActivity page and displays the selected video under history
+    private void onClickHistoryList(){
         historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        url="hhttps://www.youtube.com/watch?v=Yocja_N5s1I&list=PLBDA2E52FB1EF80C9";
+                        url=baseUrl+"Yocja_N5s1I&list=PLBDA2E52FB1EF80C9";
                         goToVideoActivity();
                         break;
                     case 1:
-                        url="https://www.youtube.com/watch?v=Eq-Wk3YqeH4&list=PLJicmE8fK0Ehj95_A5aaOvfzkKTrt3G3W&index=2&t=0s";
+                        url=baseUrl+"Eq-Wk3YqeH4&list=PLJicmE8fK0Ehj95_A5aaOvfzkKTrt3G3W&index=2&t=0s";
                         goToVideoActivity();
                         break;
                     case 2:
+                        url=baseUrl+"-hjGgFgnYIA&list=PL8dPuuaLjXtNppY8ZHMPDH5TKK2UpU8Ng";
                         goToVideoActivity();
                         break;
                     case 3:
-                        url="https://www.youtube.com/watch?v=-hjGgFgnYIA&list=PL8dPuuaLjXtNppY8ZHMPDH5TKK2UpU8Ng";
+                        url=baseUrl+"WVZQapdkwLo&list=PLqs5ohhass_TWuJqc36II6McLxqLcRJfO";
                         goToVideoActivity();
                         break;
                     case 4:
-                        url="https://www.youtube.com/watch?v=WVZQapdkwLo&list=PLqs5ohhass_TWuJqc36II6McLxqLcRJfO";
-                        goToVideoActivity();
-                        break;
-                    case 5:
-                        url="https://www.youtube.com/watch?v=r9rGX91rq5I&list=PLqs5ohhass_Tpgf5mu4R1EHvDPs2Bk_rY";
+                        url=baseUrl+"r9rGX91rq5I&list=PLqs5ohhass_Tpgf5mu4R1EHvDPs2Bk_rY";
                         goToVideoActivity();
                         break;
                 }
             }
         });
+    }
 
+    //redirects to the VideoActivity page and displays the selected video under how to series
+    private void onClickHowToList(){
         howToListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        url="https://www.youtube.com/watch?v=PKqBfVNWCEQ&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=2";
+                        url=baseUrl+"PKqBfVNWCEQ&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=2";
                         goToVideoActivity();
                         break;
                     case 1:
-                        url="https://www.youtube.com/watch?v=DoAdoSSjNSM&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=3";
+                        url=baseUrl+"DoAdoSSjNSM&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=3";
                         goToVideoActivity();
                         break;
                     case 2:
-                        url="https://www.youtube.com/watch?v=CV7hAAcApnE&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=4";
+                        url=baseUrl+"CV7hAAcApnE&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=4";
                         goToVideoActivity();
                         break;
                     case 3:
-                        url="https://www.youtube.com/watch?v=WzyvvkiUIKY&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=5";
+                        url=baseUrl+"WzyvvkiUIKY&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=5";
                         goToVideoActivity();
                         break;
                     case 4:
-                        url="https://www.youtube.com/watch?v=p0GQQT747KY&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=7";
+                        url=baseUrl+"p0GQQT747KY&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=7";
                         goToVideoActivity();
                         break;
                     case 5:
-                        url="https://www.youtube.com/watch?v=j74DfIOLvfM&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=8";
+                        url=baseUrl+"j74DfIOLvfM&list=PLV2sCNkKbhht-CdlZXeGFlPDTitaA15UX&index=8";
                         goToVideoActivity();
                         break;
                 }
             }
         });
+    }
 
+    //redirects to the VideoActivity page and displays the selected video under kids
+    private void onClickKidsList(){
         kidsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        url="https://www.youtube.com/watch?v=7eBnRP5jx48&list=PLhuEelKSHsFnJxqcMvKB093R8h4ep_Tim";
+                        url=baseUrl+"7eBnRP5jx48&list=PLhuEelKSHsFnJxqcMvKB093R8h4ep_Tim";
                         goToVideoActivity();
                         break;
                     case 1:
-                        url="https://www.youtube.com/watch?v=55vyFBtZ4EA&list=PLhuEelKSHsFnJxqcMvKB093R8h4ep_TIm&index=6";
+                        url=baseUrl+"55vyFBtZ4EA&list=PLhuEelKSHsFnJxqcMvKB093R8h4ep_TIm&index=6";
                         goToVideoActivity();
                         break;
                     case 2:
-                        url="https://www.youtube.com/watch?v=ASA213fYEjg";
+                        url=baseUrl+"ASA213fYEjg";
                         goToVideoActivity();
                         break;
                     case 3:
-                        url="https://www.youtube.com/watch?v=7vdAgTO2zvY";
+                        url=baseUrl+"7vdAgTO2zvY";
                         goToVideoActivity();
                         break;
                     case 4:
-                        url="https://www.youtube.com/watch?v=O9t15cBRPwI&list=PL54FD685741AD8C27&index=5";
+                        url=baseUrl+"O9t15cBRPwI&list=PL54FD685741AD8C27&index=5";
                         goToVideoActivity();
                         break;
                     case 5:
-                        url="https://www.youtube.com/watch?v=CJ60yTr9xvk&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=6";
+                        url=baseUrl+"CJ60yTr9xvk&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=6";
                         goToVideoActivity();
                         break;
                 }
             }
         });
-
     }
 
+    //contains a list of subjects
     public void libraryList(){
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,libraryListItems);
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,R.layout.library_list,libraryListItems){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                if (convertView==null){
+                    convertView=getLayoutInflater().inflate(R.layout.library_list,null);
+                }
+                TextView listItemName=(TextView)convertView.findViewById(R.id.listTextView);
+                listItemName.setText(libraryListItems[position]);
+                return convertView;
+            }
+        };
         libraryListView.setAdapter(arrayAdapter);
         Collections.sort(Arrays.asList(libraryListItems), new Comparator<String>() {
             @Override
@@ -505,72 +574,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void biologyList(){
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,biologyListItems);
-        biologyListView.setAdapter(arrayAdapter);
-        Collections.sort(Arrays.asList(biologyListItems), new Comparator<String>() {
-            @Override
-            public int compare(String s, String t1) {
-                return s.compareTo(t1);
-            }
-        });
-    }
-
-    public void chemistryList(){
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,chemistryListItems);
-        chemistryListView.setAdapter(arrayAdapter);
-        Collections.sort(Arrays.asList(chemistryListItems), new Comparator<String>() {
-            @Override
-            public int compare(String s, String t1) {
-                return s.compareTo(t1);
-            }
-        });
-    }
-
-    public void diyList(){
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,diyListItems);
-        diyListView.setAdapter(arrayAdapter);
-        Collections.sort(Arrays.asList(diyListItems), new Comparator<String>() {
-            @Override
-            public int compare(String s, String t1) {
-                return s.compareTo(t1);
-            }
-        });
-    }
-
-    public void historyList(){
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,historyListItems);
-        historyListView.setAdapter(arrayAdapter);
-        Collections.sort(Arrays.asList(historyListItems), new Comparator<String>() {
-            @Override
-            public int compare(String s, String t1) {
-                return s.compareTo(t1);
-            }
-        });
-    }
-
-    public void howToList(){
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,howToListItems);
-        howToListView.setAdapter(arrayAdapter);
-        Collections.sort(Arrays.asList(howToListItems), new Comparator<String>() {
-            @Override
-            public int compare(String s, String t1) {
-                return s.compareTo(t1);
-            }
-        });
-    }
-
-    public void kidsList(){
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,kidsListItems);
-        kidsListView.setAdapter(arrayAdapter);
-        Collections.sort(Arrays.asList(kidsListItems), new Comparator<String>() {
-            @Override
-            public int compare(String s, String t1) {
-                return s.compareTo(t1);
-            }
-        });
-    }
-
+    //displays a dialog box to exit the app
     public void logOut(){
         final AlertDialog.Builder builder=new AlertDialog.Builder(HomeActivity.this);
         builder.setMessage("Are you sure you want to exit?");
@@ -591,6 +595,7 @@ public class HomeActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    //loads 4 apps which will be displayed in the desktop
     private void loadDesktopApps(){
         packageManager=getPackageManager();
         apps=new ArrayList<>();
@@ -607,15 +612,14 @@ public class HomeActivity extends AppCompatActivity {
                     apps.add(appList);
                 }
             }
-            //if (appList.name.equals("Gmail") || appList.name.equals("Chrome") || appList.name.equals("Drive") || appList.name.equals("Gallery")) {
-             //   apps.add(appList);
-            //}
         }
     }
 
+    //loads the 4 apps in the listView
     private void loadDesktopListView(){
         desktopListView=(ListView)findViewById(R.id.desktopListView);
         ArrayAdapter<DesktopApps> adapter=new ArrayAdapter<DesktopApps>(this,R.layout.desktop_apps,apps){
+
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -635,6 +639,7 @@ public class HomeActivity extends AppCompatActivity {
         desktopListView.setFocusableInTouchMode(false);
     }
 
+    //on click, opens the selected app
     private void addDesktopClickListener(){
         desktopListView.setFocusableInTouchMode(false);
         desktopListView.setFocusable(false);
@@ -654,7 +659,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
+  
+    //loads all the apps present in the phone, in a list view
     private void loadStartApps(){
         manager=getPackageManager();
         app=new ArrayList<>();
@@ -676,6 +682,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    //loads all the apps in the  list view
     private void loadStartListView(){
         startListView=(ListView)findViewById(R.id.startListView);
         ArrayAdapter<AppList> adapter=new ArrayAdapter<AppList>(this,R.layout.app_list,app){
@@ -696,6 +703,7 @@ public class HomeActivity extends AppCompatActivity {
         startListView.setAdapter(adapter);
     }
 
+    //on click, opens the selected app
     private void addStartClickListener(){
         startListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -714,6 +722,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    //sets the size of the screen, when its in split screen mode
     public void rectangle(){
         Rect rect=new Rect(0,0,100,100);
         ActivityOptions activityOptions= null;
@@ -725,6 +734,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    //gives the current date and time
     public void date(){
         Date today = new Date();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("DD-MM-YYYY \n hh:mm:ss");
@@ -732,6 +742,7 @@ public class HomeActivity extends AppCompatActivity {
         dateTimeButton.setText(dateToStr);
     }
 
+    //sets the orientation of all the apps to landscape
     private void setLandscapeOrientationLock() {
         try {
             android.provider.Settings.System.putInt(getContentResolver(),
@@ -742,6 +753,7 @@ public class HomeActivity extends AppCompatActivity {
         };
     }
 
+    //opens a dialog box to get permission from the user
     private void permissionDialog(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(getApplicationContext())) {
@@ -767,6 +779,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    //redirects to the VideoActivity
     private void goToVideoActivity(){
         sharedPreferences=getSharedPreferences("pref",MODE_PRIVATE);
         final SharedPreferences.Editor editor=sharedPreferences.edit();
@@ -776,4 +789,135 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //contains list of thumbnails and video names of video under biology
+    private void thumbnailBiologyList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,R.layout.thumbnail_library_list,biologyListItems){
+            @Override
+            public int getCount() {
+                return biologyImage.length;
+            }
+
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                convertView=getLayoutInflater().inflate(R.layout.thumbnail_library_list,null);
+                ImageView imageView=(ImageView)convertView.findViewById(R.id.thumbnailImage);
+                TextView textView=(TextView)convertView.findViewById(R.id.videoNameTextView);
+                Picasso.with(HomeActivity.this).load(biologyImage[position]).into(imageView);
+                textView.setText(biologyListItems[position]);
+                return convertView;
+            }
+        };
+        biologyListView.setAdapter(arrayAdapter);
+    }
+
+    //contains list of thumbnails and video names of video under chemistry
+    private void thumbnailChemistryList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,R.layout.thumbnail_library_list,chemistryListItems){
+            @Override
+            public int getCount() {
+                return chemistryImage.length;
+            }
+
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                convertView=getLayoutInflater().inflate(R.layout.thumbnail_library_list,null);
+                ImageView imageView=(ImageView)convertView.findViewById(R.id.thumbnailImage);
+                TextView textView=(TextView)convertView.findViewById(R.id.videoNameTextView);
+                Picasso.with(HomeActivity.this).load(chemistryImage[position]).into(imageView);
+                textView.setText(chemistryListItems[position]);
+                return convertView;
+            }
+        };
+        chemistryListView.setAdapter(arrayAdapter);
+    }
+
+    //contains list of thumbnails and video names of video under diy
+    private void thumbnailDIYList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,R.layout.thumbnail_library_list,diyListItems){
+            @Override
+            public int getCount() {
+                return diyImage.length;
+            }
+
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                convertView=getLayoutInflater().inflate(R.layout.thumbnail_library_list,null);
+                ImageView imageView=(ImageView)convertView.findViewById(R.id.thumbnailImage);
+                TextView textView=(TextView)convertView.findViewById(R.id.videoNameTextView);
+                Picasso.with(HomeActivity.this).load(diyImage[position]).into(imageView);
+                textView.setText(diyListItems[position]);
+                return convertView;
+            }
+        };
+        diyListView.setAdapter(arrayAdapter);
+    }
+
+    //contains list of thumbnails and video names of video under history
+    private void thumbnailHistoryList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,R.layout.thumbnail_library_list,historyListItems){
+            @Override
+            public int getCount() {
+                return historyImage.length;
+            }
+
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                convertView=getLayoutInflater().inflate(R.layout.thumbnail_library_list,null);
+                ImageView imageView=(ImageView)convertView.findViewById(R.id.thumbnailImage);
+                TextView textView=(TextView)convertView.findViewById(R.id.videoNameTextView);
+                Picasso.with(HomeActivity.this).load(historyImage[position]).into(imageView);
+                textView.setText(historyListItems[position]);
+                return convertView;
+            }
+        };
+        historyListView.setAdapter(arrayAdapter);
+    }
+
+    //contains list of thumbnails and video names of video under how to series
+    private void thumbnailHowToList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,R.layout.thumbnail_library_list,howToListItems){
+            @Override
+            public int getCount() {
+                return howToImage.length;
+            }
+
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                convertView=getLayoutInflater().inflate(R.layout.thumbnail_library_list,null);
+                ImageView imageView=(ImageView)convertView.findViewById(R.id.thumbnailImage);
+                TextView textView=(TextView)convertView.findViewById(R.id.videoNameTextView);
+                Picasso.with(HomeActivity.this).load(howToImage[position]).into(imageView);
+                textView.setText(howToListItems[position]);
+                return convertView;
+            }
+        };
+        howToListView.setAdapter(arrayAdapter);
+    }
+
+    //contains list of thumbnails and video names of video under kids
+    private void thumbnailKidsList(){
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,R.layout.thumbnail_library_list,kidsListItems){
+            @Override
+            public int getCount() {
+                return kidsImage.length;
+            }
+
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                convertView=getLayoutInflater().inflate(R.layout.thumbnail_library_list,null);
+                ImageView imageView=(ImageView)convertView.findViewById(R.id.thumbnailImage);
+                TextView textView=(TextView)convertView.findViewById(R.id.videoNameTextView);
+                Picasso.with(HomeActivity.this).load(kidsImage[position]).into(imageView);
+                textView.setText(kidsListItems[position]);
+                return convertView;
+            }
+        };
+        kidsListView.setAdapter(arrayAdapter);
+    }
 }

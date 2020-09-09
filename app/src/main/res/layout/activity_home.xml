@@ -59,28 +59,132 @@
                 android:id="@+id/startListView"
                 android:divider="@null"
                 android:layout_marginTop="20dp"
-                android:background="@color/white"
+                android:background="@drawable/list_border"
                 android:visibility="gone"
                 android:layout_marginBottom="40dp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="150dp"
+            android:layout_width="180dp"
             android:layout_height="200dp"
             android:id="@+id/libraryLinearLayout"
             android:orientation="vertical"
-            android:layout_gravity="bottom|end"
-            android:layout_marginRight="50dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="50dp"
             android:layout_marginBottom="31dp"
-            android:background="@color/white"
-            android:visibility="visible">
+            android:background="@drawable/list_border"
+            android:visibility="gone">
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/libraryListView"
-                android:divider="@null"/>
-
+                android:divider="@null"
+                android:padding="5dp"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:id="@+id/biologyLinearLayout"
+            android:orientation="vertical"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="55dp"
+            android:layout_marginStart="220dp"
+            android:background="@drawable/list_border"
+            android:visibility="gone">
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/biologyListView"
+                android:padding="5dp"
+                android:divider="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:id="@+id/chemistryLinearLayout"
+            android:orientation="vertical"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="55dp"
+            android:layout_marginStart="220dp"
+            android:background="@drawable/list_border"
+            android:visibility="gone">
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/chemistryListView"
+                android:padding="5dp"
+                android:divider="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:id="@+id/diyLinearLayout"
+            android:orientation="vertical"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="55dp"
+            android:layout_marginStart="220dp"
+            android:background="@drawable/list_border"
+            android:visibility="gone">
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/diyListView"
+                android:padding="5dp"
+                android:divider="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:id="@+id/historyLinearLayout"
+            android:orientation="vertical"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="55dp"
+            android:layout_marginStart="220dp"
+            android:background="@drawable/list_border"
+            android:visibility="gone">
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/historyListView"
+                android:padding="5dp"
+                android:divider="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:id="@+id/howToLinearLayout"
+            android:orientation="vertical"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="55dp"
+            android:layout_marginStart="220dp"
+            android:background="@drawable/list_border"
+            android:visibility="gone">
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/howToListView"
+                android:padding="5dp"
+                android:divider="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:id="@+id/kidsLinearLayout"
+            android:orientation="vertical"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="55dp"
+            android:layout_marginStart="220dp"
+            android:background="@drawable/list_border"
+            android:visibility="gone">
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/kidsListView"
+                android:padding="5dp"
+                android:divider="@null"/>
+        </LinearLayout>
+
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -101,6 +205,12 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/ic_baseline_desktop_windows_24"/>
+            <Button
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/libraryButton"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/ic_baseline_menu_book_24"/>
 
         </LinearLayout>
 
@@ -138,13 +248,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/ic_baseline_brightness_5_24"/>
-            <Button
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:id="@+id/libraryButton"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/ic_baseline_menu_book_24"/>
+
 
             <Button
                 android:id="@+id/dateTimeButton"
@@ -152,7 +256,7 @@
                 android:layout_height="20dp"
                 android:background="@android:color/transparent"
                 android:textAlignment="center"
-                android:textColor="@color/grey"
+                android:textColor="@color/blue"
                 android:textSize="9sp"/>
         </LinearLayout>
         </FrameLayout>
