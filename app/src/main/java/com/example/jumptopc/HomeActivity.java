@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,6 +29,8 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -35,9 +38,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -65,7 +66,6 @@ public class HomeActivity extends AppCompatActivity {
     ImageButton keyboardButtonOpen,keyboardButtonClose;
     SharedPreferences sharedPreferences;
     String url;
-
     String[] allowedDesktopApps = {"Gmail", "Chrome", "Drive", "Gallery"};
     String[] libraryListItems={"History","Chemistry","Biology","How to series","Kids","DIYs"};
     String[] biologyListItems={"Carbon... SO SIMPLE: Crash Course Biology #1","45-minute Tips to Score more than 90% in Class 12 Board Exam: Biology","Board Exam Analysis: CBSE Class 12 Biology 2020","Science Booster Series - Class 10 Biology","Meritnation NEET Bytes (Biology): Heredity and variation: Part-2","Meritnation NEET Bytes (Biology): Heredity and variation: Part-1"};
@@ -84,6 +84,9 @@ public class HomeActivity extends AppCompatActivity {
     String[] historyImage={imageUrl+"Yocja_N5s1I"+imageDefault,imageUrl+"Eq-Wk3YqeH4"+imageDefault,imageUrl+"-hjGgFgnYIA"+imageDefault,imageUrl+"WVZQapdkwLo"+imageDefault,imageUrl+"r9rGX91rq5I"+imageDefault};
     String[] howToImage={imageUrl+"PKqBfVNWCEQ"+imageDefault,imageUrl+"DoAdoSSjNSM"+imageDefault,imageUrl+"CV7hAAcApnE"+imageDefault,imageUrl+"WzyvvkiUIKY"+imageDefault,imageUrl+"p0GQQT747KY/"+imageDefault,imageUrl+"j74DfIOLvfM"+imageDefault};
     String[] kidsImage={imageUrl+"7eBnRP5jx48"+imageDefault,imageUrl+"55vyFBtZ4EA"+imageDefault,imageUrl+"ASA213fYEjg"+imageDefault,imageUrl+"7vdAgTO2zvY"+imageDefault,imageUrl+"O9t15cBRPwI"+imageDefault,imageUrl+"CJ60yTr9xvk"+imageDefault};
+    String[] historyListItems={"The Agricultural Revolution: Crash Course World History #1","History vs. Genghis Khan","Crash Course European History Preview","Crash Course History of Science Preview","History of the Union Jack","Why the UK Election Results are the Worst in History."};
+    String[] howToListItems={"How To Hack Your To-Do List","How to Save the World from Email","How to Get Rich","How To Become World Class At Anything In 6 Months Or Less: 4 Hour Chef","How To Move And Pack Your House","How to Foolproof Your Budget"};
+    String[] kidsListItems={"Stories For Kids","Kids Stories (English)","Yoga For Kids","Kids and COVID-19 | FAQ","Traditional Lullaby Song for kids"};
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -144,7 +147,6 @@ public class HomeActivity extends AppCompatActivity {
         thumbnailHowToList();
         thumbnailKidsList();
 
-        //displays a dialog box to exit from the app
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -657,7 +659,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
+  
     //loads all the apps present in the phone, in a list view
     private void loadStartApps(){
         manager=getPackageManager();
@@ -710,7 +712,11 @@ public class HomeActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
-                setLandscapeOrientationLock();
+                try {
+                    setLandscapeOrientationLock();
+                } catch (Exception e) {
+                    permissionDialog();
+                }
                 startActivity(intent);
             }
         });
@@ -914,5 +920,4 @@ public class HomeActivity extends AppCompatActivity {
         };
         kidsListView.setAdapter(arrayAdapter);
     }
-
 }
