@@ -18,7 +18,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,8 +28,6 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -38,7 +35,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -66,27 +66,57 @@ public class HomeActivity extends AppCompatActivity {
     ImageButton keyboardButtonOpen,keyboardButtonClose;
     SharedPreferences sharedPreferences;
     String url;
+
     String[] allowedDesktopApps = {"Gmail", "Chrome", "Drive", "Gallery"};
     String[] libraryListItems={"History","Chemistry","Biology","How to series","Kids","DIYs"};
-    String[] biologyListItems={"Carbon... SO SIMPLE: Crash Course Biology #1","45-minute Tips to Score more than 90% in Class 12 Board Exam: Biology","Board Exam Analysis: CBSE Class 12 Biology 2020","Science Booster Series - Class 10 Biology","Meritnation NEET Bytes (Biology): Heredity and variation: Part-2","Meritnation NEET Bytes (Biology): Heredity and variation: Part-1"};
-    String[] chemistryListItems={"Chemistry - SI and Derived Units","AIIMS 2018 - Complete Paper Analysis | Chemistry","NEET Chemistry: Electrochemistry - L1","NEET Chemistry: Electrochemistry - L2","NEET Chemistry: Electrochemistry - L3","NEET: Electrochemistry - L4"};
+    String[] biologyListItems={"Carbon... SO SIMPLE: Crash Course Biology #1","45-minute Tips to Score more than 90% in Class 12 Board Exam: Biology",
+            "Board Exam Analysis: CBSE Class 12 Biology 2020","Science Booster Series - Class 10 Biology",
+            "Meritnation NEET Bytes (Biology): Heredity and variation: Part-2","Meritnation NEET Bytes (Biology): Heredity and variation: Part-1"};
+    String[] chemistryListItems={"Chemistry - SI and Derived Units","AIIMS 2018 - Complete Paper Analysis | Chemistry","NEET Chemistry: Electrochemistry - L1",
+            "NEET Chemistry: Electrochemistry - L2","NEET Chemistry: Electrochemistry - L3","NEET: Electrochemistry - L4"};
     String[] diyListItems={"Sesame Street: DIY Sock Puppies with Nina, Elmo, and Abby","DIY Economical Face Mask At Home","DIY Face Mask","DIY Hand Sanitizer"};
-    String[] historyListItems={"The Agricultural Revolution: Crash Course World History #1","History vs. Genghis Khan","Crash Course History of Science Preview","History of the Union Jack","Why the UK Election Results are the Worst in History."};
-    String[] howToListItems={"How To Hack Your To-Do List","How to Save the World from Email","How to Get Rich","How To Become World Class At Anything In 6 Months Or Less: 4 Hour Chef","How To Move And Pack Your House","How to Foolproof Your Budget"};
+    String[] historyListItems={"The Agricultural Revolution: Crash Course World History #1","History vs. Genghis Khan","Crash Course History of Science Preview",
+            "History of the Union Jack","Why the UK Election Results are the Worst in History."};
+    String[] howToListItems={"How To Hack Your To-Do List","How to Save the World from Email","How to Get Rich",
+            "How To Become World Class At Anything In 6 Months Or Less: 4 Hour Chef","How To Move And Pack Your House","How to Foolproof Your Budget"};
     String[] kidsListItems={"Stories For Kids","Kids Stories (English)","Yoga For Kids","Kids and COVID-19 | FAQ","Traditional Lullaby Song for kids"};
 
     private static String baseUrl="https://www.youtube.com/watch?v=";
     private static String imageUrl="https://img.youtube.com/vi/";
     private static String imageDefault="/default.jpg";
-    String[] biologyImage={imageUrl+"QnQe0xW_JY4"+imageDefault,imageUrl+"qtzlmOe0fro"+imageDefault,imageUrl+"q2F9ZTOiwrc"+imageDefault,imageUrl+"MfC5c13xSBo"+imageDefault,imageUrl+"conSoVBzWnA"+imageDefault,imageUrl+"CJ60yTr9xvk"+imageDefault};
-    String[] chemistryImage={imageUrl+"WV7FiOtCvHU"+imageDefault,imageUrl+"CjKnZWmCcak"+imageDefault,imageUrl+"W1emUNwTRKM"+imageDefault,imageUrl+"cIaBgN4nhCA"+imageDefault,imageUrl+"qkOrl0GnAWk"+imageDefault,imageUrl+"IXDA3r63p5g"+imageDefault};
-    String[] diyImage={imageUrl+"gafVGrXTNg0"+imageDefault,imageUrl+"fAKl4vVxTv0"+imageDefault,imageUrl+"RRofKRr5_JM"+imageDefault,imageUrl+"mMtuzEX3cSI"+imageDefault};
-    String[] historyImage={imageUrl+"Yocja_N5s1I"+imageDefault,imageUrl+"Eq-Wk3YqeH4"+imageDefault,imageUrl+"-hjGgFgnYIA"+imageDefault,imageUrl+"WVZQapdkwLo"+imageDefault,imageUrl+"r9rGX91rq5I"+imageDefault};
-    String[] howToImage={imageUrl+"PKqBfVNWCEQ"+imageDefault,imageUrl+"DoAdoSSjNSM"+imageDefault,imageUrl+"CV7hAAcApnE"+imageDefault,imageUrl+"WzyvvkiUIKY"+imageDefault,imageUrl+"p0GQQT747KY/"+imageDefault,imageUrl+"j74DfIOLvfM"+imageDefault};
-    String[] kidsImage={imageUrl+"7eBnRP5jx48"+imageDefault,imageUrl+"55vyFBtZ4EA"+imageDefault,imageUrl+"ASA213fYEjg"+imageDefault,imageUrl+"7vdAgTO2zvY"+imageDefault,imageUrl+"O9t15cBRPwI"+imageDefault,imageUrl+"CJ60yTr9xvk"+imageDefault};
-    String[] historyListItems={"The Agricultural Revolution: Crash Course World History #1","History vs. Genghis Khan","Crash Course European History Preview","Crash Course History of Science Preview","History of the Union Jack","Why the UK Election Results are the Worst in History."};
-    String[] howToListItems={"How To Hack Your To-Do List","How to Save the World from Email","How to Get Rich","How To Become World Class At Anything In 6 Months Or Less: 4 Hour Chef","How To Move And Pack Your House","How to Foolproof Your Budget"};
-    String[] kidsListItems={"Stories For Kids","Kids Stories (English)","Yoga For Kids","Kids and COVID-19 | FAQ","Traditional Lullaby Song for kids"};
+    String[] biologyImage={imageUrl+"QnQe0xW_JY4"+imageDefault,
+            imageUrl+"qtzlmOe0fro"+imageDefault,
+            imageUrl+"q2F9ZTOiwrc"+imageDefault,
+            imageUrl+"MfC5c13xSBo"+imageDefault,
+            imageUrl+"conSoVBzWnA"+imageDefault,
+            imageUrl+"CJ60yTr9xvk"+imageDefault};
+    String[] chemistryImage= {imageUrl+"WV7FiOtCvHU"+imageDefault,
+            imageUrl+"CjKnZWmCcak"+imageDefault,
+            imageUrl+"W1emUNwTRKM"+imageDefault,
+            imageUrl+"cIaBgN4nhCA"+imageDefault,
+            imageUrl+"qkOrl0GnAWk"+imageDefault,
+            imageUrl+"IXDA3r63p5g"+imageDefault};
+    String[] diyImage={imageUrl+"gafVGrXTNg0"+imageDefault,
+            imageUrl+"fAKl4vVxTv0"+imageDefault,
+            imageUrl+"RRofKRr5_JM"+imageDefault,
+            imageUrl+"mMtuzEX3cSI"+imageDefault};
+    String[] historyImage={imageUrl+"Yocja_N5s1I"+imageDefault,
+            imageUrl+"Eq-Wk3YqeH4"+imageDefault,
+            imageUrl+"-hjGgFgnYIA"+imageDefault,
+            imageUrl+"WVZQapdkwLo"+imageDefault,
+            imageUrl+"r9rGX91rq5I"+imageDefault};
+    String[] howToImage={imageUrl+"PKqBfVNWCEQ"+imageDefault,
+            imageUrl+"DoAdoSSjNSM"+imageDefault,
+            imageUrl+"CV7hAAcApnE"+imageDefault,
+            imageUrl+"WzyvvkiUIKY"+imageDefault,
+            imageUrl+"p0GQQT747KY/"+imageDefault,
+            imageUrl+"j74DfIOLvfM"+imageDefault};
+    String[] kidsImage={imageUrl+"7eBnRP5jx48"+imageDefault,
+            imageUrl+"55vyFBtZ4EA"+imageDefault,
+            imageUrl+"ASA213fYEjg"+imageDefault,
+            imageUrl+"7vdAgTO2zvY"+imageDefault,
+            imageUrl+"O9t15cBRPwI"+imageDefault
+            /*,imageUrl+"CJ60yTr9xvk"+imageDefault*/};
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -147,6 +177,7 @@ public class HomeActivity extends AppCompatActivity {
         thumbnailHowToList();
         thumbnailKidsList();
 
+        //displays a dialog box to exit from the app
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -311,6 +342,11 @@ public class HomeActivity extends AppCompatActivity {
                         visibility = biologyLinearLayout.getVisibility();
                         if (visibility == View.GONE) {
                             biologyLinearLayout.setVisibility(View.VISIBLE);
+                            chemistryLinearLayout.setVisibility(View.GONE);
+                            diyLinearLayout.setVisibility(View.GONE);
+                            historyLinearLayout.setVisibility(View.GONE);
+                            howToLinearLayout.setVisibility(View.GONE);
+                            kidsLinearLayout.setVisibility(View.GONE);
                         }
                         break;
                     //Chemistry
@@ -318,6 +354,11 @@ public class HomeActivity extends AppCompatActivity {
                         visibility = chemistryLinearLayout.getVisibility();
                         if (visibility == View.GONE) {
                             chemistryLinearLayout.setVisibility(View.VISIBLE);
+                            diyLinearLayout.setVisibility(View.GONE);
+                            historyLinearLayout.setVisibility(View.GONE);
+                            howToLinearLayout.setVisibility(View.GONE);
+                            kidsLinearLayout.setVisibility(View.GONE);
+                            biologyLinearLayout.setVisibility(View.GONE);
                         }
                         break;
                     //DIYs
@@ -325,6 +366,11 @@ public class HomeActivity extends AppCompatActivity {
                         visibility = diyLinearLayout.getVisibility();
                         if (visibility == View.GONE) {
                             diyLinearLayout.setVisibility(View.VISIBLE);
+                            historyLinearLayout.setVisibility(View.GONE);
+                            howToLinearLayout.setVisibility(View.GONE);
+                            kidsLinearLayout.setVisibility(View.GONE);
+                            biologyLinearLayout.setVisibility(View.GONE);
+                            chemistryLinearLayout.setVisibility(View.GONE);
                         }
                         break;
                     //History
@@ -332,6 +378,11 @@ public class HomeActivity extends AppCompatActivity {
                         visibility = historyLinearLayout.getVisibility();
                         if (visibility == View.GONE) {
                             historyLinearLayout.setVisibility(View.VISIBLE);
+                            howToLinearLayout.setVisibility(View.GONE);
+                            kidsLinearLayout.setVisibility(View.GONE);
+                            biologyLinearLayout.setVisibility(View.GONE);
+                            chemistryLinearLayout.setVisibility(View.GONE);
+                            diyLinearLayout.setVisibility(View.GONE);
                         }
                         break;
                     //Hoe to series
@@ -339,6 +390,11 @@ public class HomeActivity extends AppCompatActivity {
                         visibility = howToLinearLayout.getVisibility();
                         if (visibility == View.GONE) {
                             howToLinearLayout.setVisibility(View.VISIBLE);
+                            kidsLinearLayout.setVisibility(View.GONE);
+                            biologyLinearLayout.setVisibility(View.GONE);
+                            chemistryLinearLayout.setVisibility(View.GONE);
+                            diyLinearLayout.setVisibility(View.GONE);
+                            historyLinearLayout.setVisibility(View.GONE);
                         }
                         break;
                     //Kids
@@ -346,6 +402,11 @@ public class HomeActivity extends AppCompatActivity {
                         visibility = kidsLinearLayout.getVisibility();
                         if (visibility == View.GONE) {
                             kidsLinearLayout.setVisibility(View.VISIBLE);
+                            biologyLinearLayout.setVisibility(View.GONE);
+                            chemistryLinearLayout.setVisibility(View.GONE);
+                            diyLinearLayout.setVisibility(View.GONE);
+                            historyLinearLayout.setVisibility(View.GONE);
+                            howToLinearLayout.setVisibility(View.GONE);
                         }
                         break;
                 }
@@ -542,10 +603,10 @@ public class HomeActivity extends AppCompatActivity {
                         url=baseUrl+"O9t15cBRPwI&list=PL54FD685741AD8C27&index=5";
                         goToVideoActivity();
                         break;
-                    case 5:
+                    /*case 5:
                         url=baseUrl+"CJ60yTr9xvk&list=PL8z4bJQlT_9O3P-MqI_nWKdtNd2HHZ9pA&index=6";
                         goToVideoActivity();
-                        break;
+                        break;*/
                 }
             }
         });
@@ -659,7 +720,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-  
+
     //loads all the apps present in the phone, in a list view
     private void loadStartApps(){
         manager=getPackageManager();
@@ -712,11 +773,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 rectangle();
-                try {
-                    setLandscapeOrientationLock();
-                } catch (Exception e) {
-                    permissionDialog();
-                }
+                setLandscapeOrientationLock();
                 startActivity(intent);
             }
         });
@@ -920,4 +977,5 @@ public class HomeActivity extends AppCompatActivity {
         };
         kidsListView.setAdapter(arrayAdapter);
     }
+
 }
